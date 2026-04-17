@@ -12,7 +12,6 @@ font-family:Arial;
 background:#f2f4f7;
 }
 
-/* TOPBAR */
 .topbar{
 background:#0b3c75;
 color:white;
@@ -34,38 +33,19 @@ color:white;
 z-index:9999;
 transition:0.6s;
 }
-.logo{
-font-size:32px;
-font-weight:bold;
-opacity:0;
-transform:scale(0.8);
-animation:fadeIn 0.8s forwards;
-}
-.subtitle{
-font-size:12px;
-opacity:0;
-animation:fadeIn 1s .5s forwards;
-}
+.logo{font-size:32px;font-weight:bold;opacity:0;transform:scale(0.8);animation:fadeIn 0.8s forwards;}
+.subtitle{font-size:12px;opacity:0;animation:fadeIn 1s .5s forwards;}
 .loader{
-width:40px;
-height:40px;
+width:40px;height:40px;
 border:3px solid white;
 border-top:3px solid transparent;
 border-radius:50%;
 margin-top:15px;
 animation:spin 1s linear infinite;
 }
-.splash-hide{
-opacity:0;
-pointer-events:none;
-}
+.splash-hide{opacity:0;pointer-events:none;}
 
-/* MAIN */
-.container{
-max-width:420px;
-margin:auto;
-padding:15px;
-}
+.container{max-width:420px;margin:auto;padding:15px;}
 
 .card{
 background:white;
@@ -107,9 +87,7 @@ color:white;
 padding:12px;
 }
 
-.ticket-body{
-padding:15px;
-}
+.ticket-body{padding:15px;}
 
 .row{
 display:flex;
@@ -139,7 +117,7 @@ background:#ff9800;
 color:white;
 }
 
-/* WHATSAPP */
+/* WA */
 .wa{
 position:fixed;
 right:18px;
@@ -156,7 +134,7 @@ font-size:24px;
 text-decoration:none;
 }
 
-/* PAYMENT PAGE */
+/* PAYMENT */
 #payment{
 display:none;
 position:fixed;
@@ -166,7 +144,7 @@ z-index:99999;
 padding:20px;
 }
 
-/* ANIMATION */
+/* ANIM */
 @keyframes fadeIn{to{opacity:1;transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -181,23 +159,20 @@ padding:20px;
 <div class="loader"></div>
 </div>
 
-<div class="topbar">ONLINE BOOKING SYSTEM</div>
+<div class="topbar">ONLINE BOOKING VERIFICATION SYSTEM</div>
 
 <div class="container">
 
-<!-- INPUT -->
 <div class="card">
 <h3>Check Booking</h3>
 <input id="pnr" placeholder="Masukkan Kode Booking (PNR)">
 <button onclick="cekPNR()">Cek Status</button>
 </div>
 
-<!-- LOADING -->
 <div class="card" id="loading" style="display:none;text-align:center;">
 Processing request...
 </div>
 
-<!-- TICKET -->
 <div class="ticket" id="ticket">
 
 <div class="ticket-header">
@@ -236,13 +211,14 @@ Processing request...
 <button onclick="closePayment()">Kembali</button>
 </div>
 
-<!-- WHATSAPP -->
+<!-- WA -->
 <a class="wa" onclick="kirimWA()">💬</a>
 
 <!-- AUDIO PRO -->
-<audio id="click"><source src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
-<audio id="success"><source src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3"></audio>
-<audio id="pay"><source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+<audio id="click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="success" src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3"></audio>
+<audio id="pay" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+<audio id="unlock" src="https://www.soundjay.com/button/sounds/button-09.mp3"></audio>
 
 <script>
 
@@ -256,12 +232,20 @@ const db={
 
 let time=600;
 let timer;
+let audioUnlocked=false;
+
+/* AUDIO UNLOCK (FIX SUARA TIDAK KELUAR) */
+document.body.addEventListener("click",()=>{
+if(audioUnlocked) return;
+document.getElementById("unlock").play().catch(()=>{});
+audioUnlocked=true;
+});
 
 /* SOUND */
 function s(id){
-let e=document.getElementById(id);
-e.currentTime=0;
-e.play().catch(()=>{});
+let a=document.getElementById(id);
+a.currentTime=0;
+a.play().catch(()=>{});
 }
 
 /* SPLASH */
@@ -344,7 +328,7 @@ function closePayment(){
 payment.style.display="none";
 }
 
-/* WHATSAPP */
+/* WA */
 function kirimWA(){
 let text=`SkyPNR Booking:
 PNR: ${pnrOut.innerText}
