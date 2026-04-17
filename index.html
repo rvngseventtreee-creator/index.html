@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyPNR - Airline System</title>
+<title>SkyPNR System</title>
 
 <style>
 body{
@@ -12,6 +12,7 @@ font-family:Arial;
 background:#f2f4f7;
 }
 
+/* TOP */
 .topbar{
 background:#0b3c75;
 color:white;
@@ -31,28 +32,29 @@ justify-content:center;
 align-items:center;
 color:white;
 z-index:9999;
-transition:0.6s;
 }
-.logo{font-size:32px;font-weight:bold;opacity:0;transform:scale(0.8);animation:fadeIn 0.8s forwards;}
-.subtitle{font-size:12px;opacity:0;animation:fadeIn 1s .5s forwards;}
-.loader{
-width:40px;height:40px;
-border:3px solid white;
-border-top:3px solid transparent;
-border-radius:50%;
-margin-top:15px;
-animation:spin 1s linear infinite;
+.plane{
+font-size:40px;
+animation:fly 1.5s infinite alternate;
 }
-.splash-hide{opacity:0;pointer-events:none;}
+@keyframes fly{
+from{transform:translateX(-20px)}
+to{transform:translateX(20px)}
+}
 
-.container{max-width:420px;margin:auto;padding:15px;}
+/* CONTAINER */
+.container{
+max-width:420px;
+margin:auto;
+padding:15px;
+}
 
 .card{
 background:white;
 padding:15px;
 border-radius:12px;
 margin-top:15px;
-box-shadow:0 2px 10px rgba(0,0,0,0.08);
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
 
 input,button{
@@ -61,7 +63,6 @@ padding:12px;
 margin-top:10px;
 border-radius:8px;
 border:1px solid #ddd;
-box-sizing:border-box;
 }
 
 button{
@@ -77,17 +78,9 @@ display:none;
 background:white;
 border-radius:12px;
 margin-top:15px;
-overflow:hidden;
-box-shadow:0 3px 12px rgba(0,0,0,0.1);
+padding:15px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
-
-.ticket-header{
-background:#0b3c75;
-color:white;
-padding:12px;
-}
-
-.ticket-body{padding:15px;}
 
 .row{
 display:flex;
@@ -95,26 +88,28 @@ justify-content:space-between;
 margin:6px 0;
 }
 
-/* TIMER */
 .timer{
-margin-top:10px;
 background:#fff3f3;
 padding:10px;
-border-radius:8px;
 text-align:center;
+border-radius:8px;
+margin-top:10px;
 }
 
-/* STATUS */
 .status{
 margin-top:8px;
 font-weight:bold;
+color:orange;
 }
 
 /* PAYMENT */
-.pay-btn{
-margin-top:10px;
-background:#ff9800;
-color:white;
+#payment{
+display:none;
+position:fixed;
+inset:0;
+background:white;
+padding:20px;
+z-index:9999;
 }
 
 /* WA */
@@ -122,31 +117,17 @@ color:white;
 position:fixed;
 right:18px;
 bottom:18px;
-width:55px;
-height:55px;
 background:#25D366;
 color:white;
+width:55px;
+height:55px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:24px;
-text-decoration:none;
 }
 
-/* PAYMENT PAGE */
-#payment{
-display:none;
-position:fixed;
-inset:0;
-background:white;
-z-index:99999;
-padding:20px;
-}
-
-/* ANIMATION */
-@keyframes fadeIn{to{opacity:1;transform:scale(1)}}
-@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 
@@ -154,118 +135,89 @@ padding:20px;
 
 <!-- SPLASH -->
 <div id="splash">
-<div class="logo">SkyPNR</div>
-<div class="subtitle">Airline Booking System</div>
-<div class="loader"></div>
+<div class="plane">✈️</div>
+<h2>SkyPNR</h2>
 </div>
 
-<div class="topbar">ONLINE BOOKING SYSTEM</div>
+<div class="topbar">BOOKING CHECK SYSTEM</div>
 
 <div class="container">
 
 <div class="card">
-<h3>Check Booking</h3>
-<input id="pnr" placeholder="Masukkan Kode Booking (PNR)">
-<button onclick="cekPNR()">Cek Status</button>
+<h3>Cek PNR</h3>
+<input id="pnr" placeholder="Masukkan PNR">
+<button onclick="cekPNR()">Cek</button>
 </div>
 
 <div class="card" id="loading" style="display:none;text-align:center;">
-Processing request...
+Loading...
 </div>
 
 <div class="ticket" id="ticket">
 
-<div class="ticket-header">
-<span id="airline"></span>
-</div>
-
-<div class="ticket-body">
-
-<div class="row"><span>PNR</span><b id="pnrOut"></b></div>
-<div class="row"><span>Route</span><b id="rute"></b></div>
+<div class="row"><span>PNR</span><b id="outPNR"></b></div>
+<div class="row"><span>Rute</span><b id="rute"></b></div>
 <div class="row"><span>Flight</span><b id="flight"></b></div>
 <div class="row"><span>Gate</span><b id="gate"></b></div>
 
 <div class="timer">
-⏳ <span id="countdown">10:00</span>
+⏳ <span id="time">30:00</span>
 </div>
 
 <div class="status" id="status">PENDING PAYMENT</div>
 
-<button class="pay-btn" onclick="openPayment()">💳 BAYAR SEKARANG</button>
+<button onclick="openPay()">💳 BAYAR SEKARANG</button>
 
-</div>
 </div>
 
 </div>
 
 <!-- PAYMENT -->
 <div id="payment">
-<h2>💳 Payment Gateway</h2>
+<h2>Payment Gateway</h2>
 <hr>
-<p><b>PT Golden Rama Travel</b></p>
-<p>Bank BCA</p>
-<h2>123-456-7890</h2>
-<p>Atas Nama: PT Golden Rama Travel</p>
+
+<p><b>PT GOLDEN RAMA TRAVEL</b></p>
+<p>Bank : MNC</p>
+<p>No Rek: 2060-1000-6980-917</p>
+<p>Kode Bank: 485</p>
+
 <br>
-<button onclick="closePayment()">Kembali</button>
+<button onclick="closePay()">Kembali</button>
 </div>
 
-<!-- WHATSAPP -->
-<a class="wa" onclick="kirimWA()">💬</a>
+<!-- WA -->
+<div class="wa" onclick="wa()">💬</div>
 
-<!-- AUDIO PRO -->
-<audio id="clickSound">
+<!-- AUDIO SIMPLE -->
+<audio id="click">
 <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
 </audio>
 
-<audio id="successSound">
+<audio id="ok">
 <source src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3">
-</audio>
-
-<audio id="paySound">
-<source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3">
-</audio>
-
-<audio id="unlockSound">
-<source src="https://www.soundjay.com/button/sounds/button-09.mp3">
 </audio>
 
 <script>
 
-/* DATABASE */
-const db={
-"SK9X2A":{airline:"Garuda Indonesia",rute:"Jakarta - Bali",flight:"GA-401",gate:"G3"},
-"PN6R4Q":{airline:"Batik Air",rute:"Makassar - Jakarta",flight:"ID-728",gate:"G7"},
-"JT8L3M":{airline:"Lion Air",rute:"Surabaya - Lombok",flight:"JT-210",gate:"G2"},
-"GA2Z9C":{airline:"Citilink",rute:"Kendari - Makassar",flight:"QG-331",gate:"G5"}
+let db={
+"ABC123":{rute:"Jakarta - Bali",flight:"GA-101",gate:"G3"},
+"XYZ789":{rute:"Surabaya - Lombok",flight:"JT-210",gate:"G2"}
 };
 
-let time=600;
 let timer;
-let audioReady=false;
+let time=1800; // 30 MENIT
 
-/* AUDIO UNLOCK */
-document.body.addEventListener("click",()=>{
-if(audioReady) return;
-document.getElementById("unlockSound").play().catch(()=>{});
-audioReady=true;
-});
-
-/* SOUND FUNCTION */
-function s(id){
+function sound(id){
 let a=document.getElementById(id);
 a.currentTime=0;
 a.play().catch(()=>{});
 }
 
 /* SPLASH */
-window.onload=()=>{
 setTimeout(()=>{
-splash.classList.add("splash-hide");
-setTimeout(()=>splash.style.display="none",600);
-},1800);
-};
+document.getElementById("splash").style.display="none";
+},1500);
 
 /* TIMER */
 function startTimer(){
@@ -276,78 +228,61 @@ timer=setInterval(()=>{
 let m=Math.floor(time/60);
 let s=time%60;
 
-countdown.innerText=m+":"+(s<10?"0"+s:s);
+document.getElementById("time").innerText=
+m+":"+(s<10?"0"+s:s);
 
 time--;
 
-status.innerText="PENDING PAYMENT";
-status.style.color="orange";
-
-if(time<0){
+if(time<=0){
 clearInterval(timer);
-status.innerText="PAYMENT EXPIRED";
-status.style.color="red";
+document.getElementById("status").innerText="EXPIRED";
 }
 
 },1000);
 }
 
-/* CHECK PNR */
+/* CEK PNR */
 function cekPNR(){
 
-s("clickSound");
+sound("click");
 
-let pnr=document.getElementById("pnr").value.toUpperCase();
+let p=document.getElementById("pnr").value.toUpperCase();
 
-if(!db[pnr]){
+if(!db[p]){
 alert("PNR tidak ditemukan");
 return;
 }
 
-loading.style.display="block";
-ticket.style.display="none";
+document.getElementById("loading").style.display="block";
 
 setTimeout(()=>{
 
-loading.style.display="none";
+document.getElementById("loading").style.display="none";
+document.getElementById("ticket").style.display="block";
 
-let d=db[pnr];
+document.getElementById("outPNR").innerText=p;
+document.getElementById("rute").innerText=db[p].rute;
+document.getElementById("flight").innerText=db[p].flight;
+document.getElementById("gate").innerText=db[p].gate;
 
-airline.innerText=d.airline;
-pnrOut.innerText=pnr;
-rute.innerText=d.rute;
-flight.innerText=d.flight;
-gate.innerText=d.gate;
+sound("ok");
 
-ticket.style.display="block";
-
-s("successSound");
-
-time=600;
 startTimer();
 
 },1000);
 }
 
 /* PAYMENT */
-function openPayment(){
-s("paySound");
-payment.style.display="block";
+function openPay(){
+document.getElementById("payment").style.display="block";
+}
+function closePay(){
+document.getElementById("payment").style.display="none";
 }
 
-function closePayment(){
-payment.style.display="none";
-}
-
-/* WHATSAPP */
-function kirimWA(){
-let text=`SkyPNR Booking:
-PNR: ${pnrOut.innerText}
-Route: ${rute.innerText}
-Flight: ${flight.innerText}
-Status: ${status.innerText}`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(text));
+/* WA */
+function wa(){
+window.open("https://wa.me/?text=SkyPNR Booking");
 }
 
 </script>
