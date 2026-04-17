@@ -32,16 +32,17 @@ align-items:center;
 color:white;
 z-index:9999;
 }
+
 .plane{
 font-size:40px;
 animation:fly 1.5s infinite alternate;
 }
+
 @keyframes fly{
 from{transform:translateX(-20px)}
 to{transform:translateX(20px)}
 }
 
-/* CONTAINER */
 .container{
 max-width:420px;
 margin:auto;
@@ -62,6 +63,7 @@ padding:12px;
 margin-top:10px;
 border-radius:8px;
 border:1px solid #ddd;
+box-sizing:border-box;
 }
 
 button{
@@ -71,7 +73,6 @@ border:none;
 font-weight:bold;
 }
 
-/* TICKET */
 .ticket{
 display:none;
 background:white;
@@ -127,12 +128,6 @@ justify-content:center;
 font-size:24px;
 }
 
-/* ANIM */
-@keyframes fly{
-from{transform:translateX(-15px)}
-to{transform:translateX(15px)}
-}
-
 </style>
 </head>
 
@@ -160,9 +155,13 @@ Loading...
 
 <div class="ticket" id="ticket">
 
-<div class="row"><span>PNR</span><b id="outPNR"></b></div>
+<div class="row"><span>Nama</span><b id="nama"></b></div>
+<div class="row"><span>Maskapai</span><b id="maskapai"></b></div>
 <div class="row"><span>Rute</span><b id="rute"></b></div>
 <div class="row"><span>Flight</span><b id="flight"></b></div>
+<div class="row"><span>Nomor Tiket</span><b id="tiket"></b></div>
+<div class="row"><span>Class</span><b id="kelas"></b></div>
+<div class="row"><span>Bagasi</span><b id="bagasi"></b></div>
 <div class="row"><span>Gate</span><b id="gate"></b></div>
 
 <div class="timer">
@@ -179,7 +178,7 @@ Loading...
 
 <!-- PAYMENT -->
 <div id="payment">
-<h2>💳Payment Gateway</h2>
+<h2>💳 Payment Gateway</h2>
 <hr>
 
 <p><b>PT GOLDEN RAMA TRAVEL</b></p>
@@ -196,17 +195,46 @@ Loading...
 
 <script>
 
-/* DATABASE */
+/* DATABASE FULL */
 let db={
-"JKUTZG":{rute:"Jakarta - Bali",flight:"GA-101",gate:"G3"},
-"XYZ789":{rute:"Surabaya - Lombok",flight:"JT-210",gate:"G2"},
-"SK9X2A":{rute:"Jakarta - Medan",flight:"ID-728",gate:"G7"}
+"JKUTZG":{
+nama:"Budi Santoso",
+maskapai:"Garuda Indonesia",
+rute:"Jakarta - Bali",
+flight:"GA-101",
+tiket:"TKT-88991234",
+kelas:"Economy",
+bagasi:"20 Kg",
+gate:"G3"
+},
+
+"XYZ789":{
+nama:"Siti Aisyah",
+maskapai:"Lion Air",
+rute:"Surabaya - Lombok",
+flight:"JT-210",
+tiket:"TKT-77881221",
+kelas:"Economy",
+bagasi:"15 Kg",
+gate:"G2"
+},
+
+"SK9X2A":{
+nama:"Ahmad Fauzi",
+maskapai:"Citilink",
+rute:"Jakarta - Medan",
+flight:"ID-728",
+tiket:"TKT-55667788",
+kelas:"Business",
+bagasi:"30 Kg",
+gate:"G7"
+}
 };
 
 let time=1800; // 30 menit
 let timer;
 
-/* BIP SOUND (ANTI BLOCK - PASTI BUNYI) */
+/* BIP SOUND */
 function bip(){
 let ctx=new (window.AudioContext||window.webkitAudioContext)();
 let o=ctx.createOscillator();
@@ -273,13 +301,18 @@ setTimeout(()=>{
 document.getElementById("loading").style.display="none";
 document.getElementById("ticket").style.display="block";
 
-document.getElementById("outPNR").innerText=p;
-document.getElementById("rute").innerText=db[p].rute;
-document.getElementById("flight").innerText=db[p].flight;
-document.getElementById("gate").innerText=db[p].gate;
+let d=db[p];
+
+document.getElementById("nama").innerText=d.nama;
+document.getElementById("maskapai").innerText=d.maskapai;
+document.getElementById("rute").innerText=d.rute;
+document.getElementById("flight").innerText=d.flight;
+document.getElementById("tiket").innerText=d.tiket;
+document.getElementById("kelas").innerText=d.kelas;
+document.getElementById("bagasi").innerText=d.bagasi;
+document.getElementById("gate").innerText=d.gate;
 
 bip();
-
 startTimer();
 
 },1000);
