@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cek PNR</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input {
+      padding: 10px;
+      width: 200px;
+    }
+    button {
+      padding: 10px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Cek PNR</h1>
+  <input type="text" id="pnr" placeholder="Masukkan Kode PNR">
+  <br><br>
+  <button onclick="cekPNR()">Cek</button>
+
+  <div id="result"></div>
+
+  <script>
+    function cekPNR() {
+      let pnr = document.getElementById("pnr").value.toUpperCase();
+      let result = document.getElementById("result");
+
+      // Data dummy
+      let data = {
+        "ABC123": "Nama: Budi | Tujuan: Jakarta | Status: Confirmed",
+        "XYZ789": "Nama: Siti | Tujuan: Makassar | Status: Pending"
+      };
+
+      if (data[pnr]) {
+        result.innerHTML = data[pnr];
+      } else {
+        result.innerHTML = "PNR tidak ditemukan";
+      }
+    }
+  </script>
+
+</body>
+</html>
