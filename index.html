@@ -3,160 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyPNR - Booking Verification</title>
+<title>SkyPNR - Booking System</title>
 
 <style>
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f2f4f7;
+margin:0;
+font-family:Arial;
+background:#f2f4f7;
 }
 
-/* TOP BAR REAL OTA STYLE */
+/* TOP BAR */
 .topbar{
-  background:#0b3c75;
-  color:white;
-  padding:14px;
-  text-align:center;
-  font-weight:bold;
-  letter-spacing:1px;
+background:#0b3c75;
+color:white;
+text-align:center;
+padding:14px;
+font-weight:bold;
 }
 
 /* SPLASH */
 #splash{
-  position:fixed;
-  inset:0;
-  background:#0b3c75;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  color:white;
-  z-index:9999;
-  transition:0.6s;
+position:fixed;
+inset:0;
+background:#0b3c75;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+color:white;
+z-index:9999;
+transition:0.6s;
 }
 .logo{
-  font-size:30px;
-  font-weight:bold;
-  opacity:0;
-  transform:scale(0.8);
-  animation:fadeIn 0.8s forwards;
+font-size:30px;
+font-weight:bold;
+opacity:0;
+transform:scale(0.8);
+animation:fadeIn 0.8s forwards;
 }
-.subtitle{
-  font-size:12px;
-  opacity:0;
-  animation:fadeIn 1s 0.5s forwards;
-}
+.subtitle{font-size:12px;opacity:0;animation:fadeIn 1s .5s forwards;}
 .loader{
-  margin-top:15px;
-  width:38px;
-  height:38px;
-  border:3px solid white;
-  border-top:3px solid transparent;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
+width:40px;height:40px;
+border:3px solid white;
+border-top:3px solid transparent;
+border-radius:50%;
+margin-top:15px;
+animation:spin 1s linear infinite;
 }
-.splash-hide{opacity:0; pointer-events:none;}
+.splash-hide{opacity:0;pointer-events:none;}
 
-.container{
-  max-width:420px;
-  margin:auto;
-  padding:15px;
-}
+.container{max-width:420px;margin:auto;padding:15px;}
 
 .card{
-  background:white;
-  border-radius:12px;
-  padding:15px;
-  margin-top:15px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+background:white;
+padding:15px;
+border-radius:12px;
+margin-top:15px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
 }
 
 input,button{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border-radius:8px;
-  border:1px solid #ddd;
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ddd;
+box-sizing:border-box;
 }
 
 button{
-  background:#0b3c75;
-  color:white;
-  border:none;
-  font-weight:bold;
+background:#0b3c75;
+color:white;
+border:none;
+font-weight:bold;
 }
 
-/* TICKET STYLE REAL BOARDING */
+/* TICKET */
 .ticket{
-  display:none;
-  margin-top:15px;
-  background:white;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 3px 15px rgba(0,0,0,0.1);
+display:none;
+background:white;
+border-radius:12px;
+margin-top:15px;
+overflow:hidden;
+box-shadow:0 3px 12px rgba(0,0,0,0.1);
 }
 
 .ticket-header{
-  background:#0b3c75;
-  color:white;
-  padding:12px;
+background:#0b3c75;
+color:white;
+padding:12px;
 }
 
-.ticket-body{
-  padding:15px;
+.ticket-body{padding:15px;}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin:6px 0;
 }
 
-.line{
-  display:flex;
-  justify-content:space-between;
-  margin:6px 0;
-  font-size:14px;
-}
-
-.label{
-  color:#666;
-}
-
-.value{
-  font-weight:bold;
-}
-
-/* STATUS */
-.status{
-  margin-top:10px;
-  font-weight:bold;
-}
-
-/* TIMER STYLE */
 .timer{
-  margin-top:10px;
-  padding:10px;
-  background:#fff3f3;
-  border-radius:8px;
-  text-align:center;
+margin-top:10px;
+background:#fff3f3;
+padding:10px;
+border-radius:8px;
+text-align:center;
 }
 
-/* WA FLOAT */
+.status{
+margin-top:8px;
+font-weight:bold;
+}
+
+/* WA */
 .wa{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  width:55px;
-  height:55px;
-  background:#25D366;
-  color:white;
-  font-size:24px;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-decoration:none;
-  box-shadow:0 4px 10px rgba(0,0,0,0.3);
+position:fixed;
+right:18px;
+bottom:18px;
+width:55px;
+height:55px;
+background:#25D366;
+color:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+text-decoration:none;
 }
 
-/* ANIM */
-@keyframes fadeIn{to{opacity:1; transform:scale(1)}}
+/* PAYMENT PAGE */
+#payment{
+display:none;
+position:fixed;
+inset:0;
+background:white;
+z-index:99999;
+padding:20px;
+}
+
+@keyframes fadeIn{to{opacity:1;transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
@@ -165,23 +151,23 @@ button{
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="logo">SkyPNR</div>
-  <div class="subtitle">Booking Verification System</div>
-  <div class="loader"></div>
+<div class="logo">SkyPNR</div>
+<div class="subtitle">Airline Booking System</div>
+<div class="loader"></div>
 </div>
 
-<div class="topbar">ONLINE BOOKING CHECK SYSTEM</div>
+<div class="topbar">ONLINE BOOKING VERIFICATION</div>
 
 <div class="container">
 
 <div class="card">
-<h3>Check Your Booking</h3>
-<input id="pnr" placeholder="Enter Booking Code (PNR)">
-<button onclick="cekPNR()">Verify Booking</button>
+<h3>Check Booking</h3>
+<input id="pnr" placeholder="Masukkan Kode Booking (PNR)">
+<button onclick="cekPNR()">Cek Status</button>
 </div>
 
 <div class="card" id="loading" style="display:none;text-align:center;">
-Processing request...
+Processing...
 </div>
 
 <div class="ticket" id="ticket">
@@ -192,29 +178,50 @@ Processing request...
 
 <div class="ticket-body">
 
-<div class="line"><span class="label">PNR</span><span class="value" id="pnrOut"></span></div>
-<div class="line"><span class="label">Route</span><span class="value" id="rute"></span></div>
-<div class="line"><span class="label">Flight</span><span class="value" id="flight"></span></div>
-<div class="line"><span class="label">Gate</span><span class="value" id="gate"></span></div>
+<div class="row"><span>PNR</span><b id="pnrOut"></b></div>
+<div class="row"><span>Route</span><b id="rute"></b></div>
+<div class="row"><span>Flight</span><b id="flight"></b></div>
+<div class="row"><span>Gate</span><b id="gate"></b></div>
 
 <div class="timer">
-⏳ Payment Timeout: <span id="countdown">10:00</span>
+⏳ <span id="countdown">10:00</span>
 </div>
 
-<div class="status" id="status">CONFIRMED BOOKING</div>
+<div class="status" id="status">PENDING PAYMENT</div>
+
+<button onclick="openPayment()">💳 BAYAR SEKARANG</button>
 
 </div>
 </div>
 
 </div>
 
+<!-- PAYMENT PAGE -->
+<div id="payment">
+<h2>💳 Payment Gateway</h2>
+<hr>
+
+<p><b>PT Golden Rama Travel</b></p>
+<p>Bank BCA</p>
+<p>No Rekening:</p>
+<h2>123-456-7890</h2>
+
+<p>Atas Nama: PT Golden Rama Travel</p>
+
+<br>
+
+<button onclick="closePayment()">Kembali</button>
+</div>
+
+<!-- WHATSAPP -->
 <a class="wa" onclick="kirimWA()">💬</a>
 
 <script>
+
 let time=600;
 let timer;
 
-/* DATABASE REAL LOOK */
+/* DATABASE */
 const db={
 "SK9X2A":{airline:"Garuda Indonesia",rute:"Jakarta - Bali",flight:"GA-401",gate:"G3"},
 "PN6R4Q":{airline:"Batik Air",rute:"Makassar - Jakarta",flight:"ID-728",gate:"G7"},
@@ -230,29 +237,38 @@ setTimeout(()=>splash.style.display="none",600);
 },1800);
 };
 
-/* TIMER */
+/* TIMER FIX */
 function startTimer(){
 clearInterval(timer);
 timer=setInterval(()=>{
+
 let m=Math.floor(time/60);
 let s=time%60;
+
 countdown.innerText=m+":"+(s<10?"0"+s:s);
+
 time--;
+
+/* STATUS FIX */
+status.innerText="PENDING PAYMENT";
+status.style.color="orange";
 
 if(time<0){
 clearInterval(timer);
-status.innerText="EXPIRED";
+status.innerText="PAYMENT EXPIRED";
 status.style.color="red";
 }
+
 },1000);
 }
 
 /* MAIN */
 function cekPNR(){
+
 let pnr=document.getElementById("pnr").value.toUpperCase();
 
 if(!db[pnr]){
-alert("Booking not found");
+alert("PNR tidak ditemukan");
 return;
 }
 
@@ -274,17 +290,22 @@ gate.innerText=d.gate;
 ticket.style.display="block";
 
 time=600;
-status.innerText="CONFIRMED BOOKING";
-status.style.color="green";
-
 startTimer();
 
 },1000);
 }
 
+/* PAYMENT */
+function openPayment(){
+payment.style.display="block";
+}
+function closePayment(){
+payment.style.display="none";
+}
+
 /* WA */
 function kirimWA(){
-let text=`Booking SkyPNR:
+let text=`SkyPNR Booking:
 PNR: ${pnrOut.innerText}
 Route: ${rute.innerText}
 Flight: ${flight.innerText}
@@ -292,6 +313,7 @@ Status: ${status.innerText}`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(text));
 }
+
 </script>
 
 </body>
