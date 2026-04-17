@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyPNR - Booking System</title>
+<title>SkyPNR - Airline Booking System</title>
 
 <style>
 body{
@@ -12,7 +12,7 @@ font-family:Arial;
 background:#f2f4f7;
 }
 
-/* TOP BAR */
+/* TOPBAR */
 .topbar{
 background:#0b3c75;
 color:white;
@@ -35,24 +35,37 @@ z-index:9999;
 transition:0.6s;
 }
 .logo{
-font-size:30px;
+font-size:32px;
 font-weight:bold;
 opacity:0;
 transform:scale(0.8);
 animation:fadeIn 0.8s forwards;
 }
-.subtitle{font-size:12px;opacity:0;animation:fadeIn 1s .5s forwards;}
+.subtitle{
+font-size:12px;
+opacity:0;
+animation:fadeIn 1s .5s forwards;
+}
 .loader{
-width:40px;height:40px;
+width:40px;
+height:40px;
 border:3px solid white;
 border-top:3px solid transparent;
 border-radius:50%;
 margin-top:15px;
 animation:spin 1s linear infinite;
 }
-.splash-hide{opacity:0;pointer-events:none;}
+.splash-hide{
+opacity:0;
+pointer-events:none;
+}
 
-.container{max-width:420px;margin:auto;padding:15px;}
+/* MAIN */
+.container{
+max-width:420px;
+margin:auto;
+padding:15px;
+}
 
 .card{
 background:white;
@@ -94,7 +107,9 @@ color:white;
 padding:12px;
 }
 
-.ticket-body{padding:15px;}
+.ticket-body{
+padding:15px;
+}
 
 .row{
 display:flex;
@@ -102,6 +117,7 @@ justify-content:space-between;
 margin:6px 0;
 }
 
+/* TIMER */
 .timer{
 margin-top:10px;
 background:#fff3f3;
@@ -110,12 +126,20 @@ border-radius:8px;
 text-align:center;
 }
 
+/* STATUS */
 .status{
 margin-top:8px;
 font-weight:bold;
 }
 
-/* WA */
+/* PAYMENT BUTTON */
+.pay-btn{
+margin-top:10px;
+background:#ff9800;
+color:white;
+}
+
+/* WHATSAPP */
 .wa{
 position:fixed;
 right:18px;
@@ -142,6 +166,7 @@ z-index:99999;
 padding:20px;
 }
 
+/* ANIMATION */
 @keyframes fadeIn{to{opacity:1;transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -156,20 +181,23 @@ padding:20px;
 <div class="loader"></div>
 </div>
 
-<div class="topbar">ONLINE BOOKING VERIFICATION</div>
+<div class="topbar">ONLINE BOOKING SYSTEM</div>
 
 <div class="container">
 
+<!-- INPUT -->
 <div class="card">
 <h3>Check Booking</h3>
 <input id="pnr" placeholder="Masukkan Kode Booking (PNR)">
 <button onclick="cekPNR()">Cek Status</button>
 </div>
 
+<!-- LOADING -->
 <div class="card" id="loading" style="display:none;text-align:center;">
-Processing...
+Processing request...
 </div>
 
+<!-- TICKET -->
 <div class="ticket" id="ticket">
 
 <div class="ticket-header">
@@ -189,37 +217,34 @@ Processing...
 
 <div class="status" id="status">PENDING PAYMENT</div>
 
-<button onclick="openPayment()">💳 BAYAR SEKARANG</button>
+<button class="pay-btn" onclick="openPayment()">💳 BAYAR SEKARANG</button>
 
 </div>
 </div>
 
 </div>
 
-<!-- PAYMENT PAGE -->
+<!-- PAYMENT -->
 <div id="payment">
 <h2>💳 Payment Gateway</h2>
 <hr>
-
 <p><b>PT Golden Rama Travel</b></p>
 <p>Bank BCA</p>
-<p>No Rekening:</p>
 <h2>123-456-7890</h2>
-
 <p>Atas Nama: PT Golden Rama Travel</p>
-
 <br>
-
 <button onclick="closePayment()">Kembali</button>
 </div>
 
 <!-- WHATSAPP -->
 <a class="wa" onclick="kirimWA()">💬</a>
 
-<script>
+<!-- AUDIO PRO -->
+<audio id="click"><source src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="success"><source src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3"></audio>
+<audio id="pay"><source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
 
-let time=600;
-let timer;
+<script>
 
 /* DATABASE */
 const db={
@@ -229,6 +254,16 @@ const db={
 "GA2Z9C":{airline:"Citilink",rute:"Kendari - Makassar",flight:"QG-331",gate:"G5"}
 };
 
+let time=600;
+let timer;
+
+/* SOUND */
+function s(id){
+let e=document.getElementById(id);
+e.currentTime=0;
+e.play().catch(()=>{});
+}
+
 /* SPLASH */
 window.onload=()=>{
 setTimeout(()=>{
@@ -237,9 +272,10 @@ setTimeout(()=>splash.style.display="none",600);
 },1800);
 };
 
-/* TIMER FIX */
+/* TIMER */
 function startTimer(){
 clearInterval(timer);
+
 timer=setInterval(()=>{
 
 let m=Math.floor(time/60);
@@ -249,7 +285,6 @@ countdown.innerText=m+":"+(s<10?"0"+s:s);
 
 time--;
 
-/* STATUS FIX */
 status.innerText="PENDING PAYMENT";
 status.style.color="orange";
 
@@ -262,8 +297,10 @@ status.style.color="red";
 },1000);
 }
 
-/* MAIN */
+/* CHECK PNR */
 function cekPNR(){
+
+s("click");
 
 let pnr=document.getElementById("pnr").value.toUpperCase();
 
@@ -289,6 +326,8 @@ gate.innerText=d.gate;
 
 ticket.style.display="block";
 
+s("success");
+
 time=600;
 startTimer();
 
@@ -297,13 +336,15 @@ startTimer();
 
 /* PAYMENT */
 function openPayment(){
+s("pay");
 payment.style.display="block";
 }
+
 function closePayment(){
 payment.style.display="none";
 }
 
-/* WA */
+/* WHATSAPP */
 function kirimWA(){
 let text=`SkyPNR Booking:
 PNR: ${pnrOut.innerText}
