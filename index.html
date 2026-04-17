@@ -5,31 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cek PNR</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
 <style>
 :root{
   --primary:#0b3c75;
-  --bg1:#0b3c75;
-  --bg2:#1e5aa8;
 }
-*{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:linear-gradient(to bottom,var(--bg1),var(--bg2));
+  background:linear-gradient(to bottom,#0b3c75,#1e5aa8);
 }
 
-.container{max-width:430px;margin:auto;padding:15px;}
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:15px;
+}
 
-.header{text-align:center;color:#fff;margin-bottom:12px}
+.header{
+  text-align:center;
+  color:white;
+  margin-bottom:15px;
+}
 
 .card{
-  background:#fff;
+  background:white;
   padding:15px;
   border-radius:14px;
   margin-bottom:12px;
-  box-shadow:0 6px 14px rgba(0,0,0,.15);
+  box-shadow:0 6px 14px rgba(0,0,0,0.15);
 }
 
 input,button{
@@ -41,52 +45,46 @@ input,button{
 
 button{
   background:var(--primary);
-  color:#fff;
+  color:white;
   border:none;
   font-weight:bold;
 }
 
-/* LOADING SKELETON */
-.skeleton{
+.loading{
   display:none;
-}
-.skel{
-  height:14px;
-  background:linear-gradient(90deg,#eee,#ddd,#eee);
-  margin:8px 0;
-  border-radius:6px;
-  animation:shimmer 1.2s infinite;
-}
-@keyframes shimmer{
-  0%{background-position:-200px 0}
-  100%{background-position:200px 0}
+  text-align:center;
+  color:#555;
 }
 
-/* TICKET */
 .ticket{
   display:none;
-  background:#fff;
+  background:white;
   border-radius:16px;
   overflow:hidden;
 }
 
 .ticket-header{
   background:var(--primary);
-  color:#fff;
+  color:white;
   padding:12px;
 }
 
-.ticket-body{padding:15px;font-size:14px}
+.ticket-body{
+  padding:15px;
+  font-size:14px;
+}
 
-.row{display:flex;justify-content:space-between;margin-bottom:6px}
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
 
-/* perforation */
 .perforation{
   border-top:2px dashed #ccc;
   margin:12px 0;
 }
 
-/* passenger list */
 .passenger{
   background:#f7f7f7;
   padding:8px;
@@ -95,20 +93,6 @@ button{
   font-size:13px;
 }
 
-/* barcode fake */
-.barcode{
-  height:40px;
-  background:repeating-linear-gradient(
-    90deg,
-    #000 0px,
-    #000 2px,
-    #fff 2px,
-    #fff 4px
-  );
-  margin-top:10px;
-}
-
-/* timer */
 .timer{
   background:#ffe5e5;
   padding:8px;
@@ -116,11 +100,14 @@ button{
   text-align:center;
 }
 
-.status{font-weight:bold;margin-top:6px}
+.status{
+  font-weight:bold;
+  margin-top:6px;
+}
 
-.qr{text-align:center;margin-top:10px}
-
-.actions button{margin-top:8px}
+.actions button{
+  margin-top:8px;
+}
 
 .info{
   font-size:11px;
@@ -128,78 +115,68 @@ button{
   text-align:center;
   margin-top:10px;
 }
-
-/* PRINT STYLE */
-@media print{
-  body{background:#fff}
-  button{display:none}
-}
 </style>
 </head>
 
 <body>
 
+<!-- SOUND -->
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="loadingSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
 <div class="container">
 
-<div class="header">
-  <h2>✈️ Cek PNR</h2>
-  <p>Sistem Informasi Reservasi Penerbangan</p>
-</div>
-
-<div class="card">
-  <input id="pnr" placeholder="Kode Booking (6 karakter)">
-  <button onclick="cekPNR()">Cek Status</button>
-</div>
-
-<!-- LOADING -->
-<div class="card skeleton" id="loading">
-  <div class="skel"></div>
-  <div class="skel"></div>
-  <div class="skel"></div>
-</div>
-
-<!-- TICKET -->
-<div class="ticket" id="ticket">
-  <div class="ticket-header">
-    <h3 id="airline"></h3>
-    <small id="date"></small>
+  <div class="header">
+    <h2>✈️ Cek PNR</h2>
+    <p>Sistem Informasi Reservasi Penerbangan</p>
   </div>
 
-  <div class="ticket-body">
-
-    <div class="row"><span>PNR</span><b id="pnrOut"></b></div>
-    <div class="row"><span>Rute</span><b id="rute"></b></div>
-    <div class="row"><span>Flight</span><b id="flight"></b></div>
-
-    <div class="perforation"></div>
-
-    <div id="passengers"></div>
-
-    <div class="perforation"></div>
-
-    <div class="row"><span>Gate</span><b id="gate"></b></div>
-    <div class="row"><span>Boarding</span><b id="boarding"></b></div>
-
-    <div class="timer">
-      ⏳ <span id="countdown">10:00</span>
-    </div>
-
-    <div class="status" id="status">BOOKING</div>
-
-    <div class="qr" id="qrcode"></div>
-    <div class="barcode"></div>
-
-    <div class="actions">
-      <button onclick="window.print()">Cetak Tiket</button>
-      <button onclick="shareWA()">Kirim WhatsApp</button>
-    </div>
-
-    <div class="info">
-      Informasi ditampilkan berdasarkan kode booking pada sistem reservasi.
-    </div>
-
+  <div class="card">
+    <input id="pnr" placeholder="Kode Booking (6 karakter)">
+    <button onclick="playSound(); cekPNR()">Cek Status</button>
   </div>
-</div>
+
+  <div class="card loading" id="loading">
+    Mengambil data reservasi...
+  </div>
+
+  <div class="ticket" id="ticket">
+    <div class="ticket-header">
+      <h3 id="airline"></h3>
+      <small id="date"></small>
+    </div>
+
+    <div class="ticket-body">
+
+      <div class="row"><span>PNR</span><b id="pnrOut"></b></div>
+      <div class="row"><span>Rute</span><b id="rute"></b></div>
+      <div class="row"><span>Flight</span><b id="flight"></b></div>
+
+      <div class="perforation"></div>
+
+      <div id="passengers"></div>
+
+      <div class="perforation"></div>
+
+      <div class="row"><span>Gate</span><b id="gate"></b></div>
+      <div class="row"><span>Boarding</span><b id="boarding"></b></div>
+
+      <div class="timer">
+        ⏳ <span id="countdown">10:00</span>
+      </div>
+
+      <div class="status" id="status">BOOKING</div>
+
+      <div class="actions">
+        <button onclick="shareWA()">Kirim WhatsApp</button>
+      </div>
+
+      <div class="info">
+        Informasi ditampilkan berdasarkan kode booking pada sistem reservasi.
+      </div>
+
+    </div>
+  </div>
 
 </div>
 
@@ -209,6 +186,10 @@ let timerInterval;
 
 const airlines=["Garuda Indonesia","Lion Air","Batik Air","Citilink"];
 const routes=["Jakarta → Bali","Makassar → Jakarta","Surabaya → Lombok","Kendari → Makassar"];
+
+function playSound(){
+  document.getElementById("clickSound").play();
+}
 
 function validPNR(pnr){
   return /^[A-Z0-9]{6}$/.test(pnr);
@@ -245,7 +226,7 @@ function startTimer(){
     let m=Math.floor(time/60);
     let s=time%60;
     if(s<10)s="0"+s;
-    document.getElementById("countdown").innerText=m+":"+s;
+    countdown.innerText=m+":"+s;
     time--;
 
     if(time<300){
@@ -269,6 +250,8 @@ function cekPNR(){
     return;
   }
 
+  document.getElementById("loadingSound").play();
+
   loading.style.display="block";
   ticket.style.display="none";
 
@@ -290,19 +273,16 @@ function cekPNR(){
 
     ticket.style.display="block";
 
-    qrcode.innerHTML="";
-    new QRCode(qrcode,d.pnr);
-
     time=600;
     status.innerText="BOOKING";
     status.style.color="green";
 
     startTimer();
-  },1800);
+  },1500);
 }
 
 function shareWA(){
-  let text="Cek tiket PNR: "+pnrOut.innerText;
+  let text="PNR: "+pnrOut.innerText+" | "+rute.innerText;
   window.open("https://wa.me/?text="+encodeURIComponent(text));
 }
 </script>
