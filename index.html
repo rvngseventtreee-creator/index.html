@@ -3,85 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rani Love Farid</title>
+<title>Cek PNR</title>
 
 <style>
 body {
-  margin: 0;
-  overflow: hidden;
-  height: 100vh;
-  background: linear-gradient(135deg, #007bff, #00c6ff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #0b3c75, #1e5aa8);
+    color: white;
 }
 
-/* Tulisan utama */
-.text {
-  font-size: 55px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  z-index: 2;
-  animation: glow 1.5s infinite alternate;
+.container {
+    padding: 15px;
+    max-width: 400px;
+    margin: auto;
 }
 
-/* Efek glow */
-@keyframes glow {
-  from {
-    text-shadow: 0 0 10px #fff, 0 0 20px #00c6ff;
-  }
-  to {
-    text-shadow: 0 0 20px #fff, 0 0 40px #007bff;
-  }
+.header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Hati jatuh */
-.heart {
-  position: absolute;
-  color: red;
-  font-size: 20px;
-  animation: fall linear infinite;
+.card {
+    background: white;
+    color: black;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    animation: fadeIn 0.5s ease;
 }
 
-@keyframes fall {
-  0% {
-    transform: translateY(-10vh);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(110vh);
-    opacity: 0;
-  }
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #0b3c75;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.result {
+    display: none;
+}
+
+.status {
+    color: green;
+    font-weight: bold;
+}
+
+.warning {
+    color: red;
+    font-weight: bold;
+}
+
+.timer {
+    background: #ffe5e5;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
 }
 </style>
-
 </head>
+
 <body>
 
-<div class="text">💙 RANI LOVE FARID 💙</div>
+<div class="container">
+
+    <div class="header">
+        <h2>Cek PNR</h2>
+        <p>Status Penerbangan</p>
+    </div>
+
+    <div class="card">
+        <label>Kode Booking (PNR)</label>
+        <input type="text" id="pnr" placeholder="Contoh: ABC123">
+
+        <label>Nama Penumpang</label>
+        <input type="text" id="nama" placeholder="Contoh: Budi">
+
+        <button onclick="cekPNR()">Cek Status</button>
+    </div>
+
+    <div class="card result" id="hasil">
+        <h3>Detail Penerbangan</h3>
+        <p><b>Nama:</b> <span id="rNama"></span></p>
+        <p><b>Kode PNR:</b> <span id="rPNR"></span></p>
+        <p><b>Rute:</b> Jakarta → Bali</p>
+        <p><b>Seat:</b> 12A</p>
+        <p><b>Class:</b> Ekonomi</p>
+        <p><b>No E-Tiket:</b> 123-4567890123</p>
+        <p><b>Jam:</b> 10:00 WIB</p>
+
+        <div class="timer">
+            ⏳ Batas Pembayaran: <span id="countdown">10:00</span>
+        </div>
+
+        <p class="warning">⚠️ Segera selesaikan pembayaran sebelum waktu habis!</p>
+        <p class="status">Status: BOOKING</p>
+    </div>
+
+</div>
 
 <script>
-// bikin hati jatuh
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML = "❤️";
+let time = 600; // 10 menit
 
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
-  heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+function startTimer() {
+    let timer = setInterval(function() {
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
 
-  document.body.appendChild(heart);
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-  setTimeout(() => {
-    heart.remove();
-  }, 5000);
+        document.getElementById("countdown").innerText = minutes + ":" + seconds;
+
+        time--;
+
+        if (time < 0) {
+            clearInterval(timer);
+            document.getElementById("countdown").innerText = "Waktu Habis";
+        }
+    }, 1000);
 }
 
-// jalankan terus
-setInterval(createHeart, 300);
+function cekPNR() {
+    let pnr = document.getElementById("pnr").value;
+    let nama = document.getElementById("nama").value;
+
+    if(pnr === "" || nama === "") {
+        alert("Isi semua data!");
+        return;
+    }
+
+    document.getElementById("rNama").innerText = nama;
+    document.getElementById("rPNR").innerText = pnr;
+
+    document.getElementById("hasil").style.display = "block";
+
+    startTimer();
+}
 </script>
 
 </body>
