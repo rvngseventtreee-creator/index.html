@@ -11,14 +11,13 @@
 body{
   margin:0;
   font-family:Arial;
-  background:linear-gradient(to bottom,#0b3c75,#1e5aa8);
+  background:linear-gradient(#0b3c75,#1e5aa8);
 }
 
-/* SPLASH PREMIUM */
+/* SPLASH */
 #splash{
   position:fixed;
-  width:100%;
-  height:100%;
+  inset:0;
   background:linear-gradient(#0b3c75,#1e5aa8);
   display:flex;
   flex-direction:column;
@@ -28,6 +27,7 @@ body{
   z-index:9999;
   transition:0.6s;
 }
+
 .logo{
   font-size:32px;
   font-weight:bold;
@@ -35,12 +35,13 @@ body{
   transform:scale(0.8);
   animation:logoIn 0.8s forwards;
 }
+
 .subtitle{
   font-size:12px;
-  margin-top:5px;
   opacity:0;
   animation:fadeIn 1s 0.5s forwards;
 }
+
 .loader{
   margin-top:20px;
   width:40px;
@@ -50,16 +51,24 @@ body{
   border-radius:50%;
   animation:spin 1s linear infinite;
 }
-.splash-hide{ opacity:0; pointer-events:none; }
 
-@keyframes logoIn{ to{opacity:1; transform:scale(1);} }
-@keyframes fadeIn{ to{opacity:1;} }
-@keyframes spin{ to{transform:rotate(360deg);} }
+.splash-hide{
+  opacity:0;
+  pointer-events:none;
+}
 
 /* MAIN */
-.container{ max-width:420px; margin:auto; padding:15px; }
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:15px;
+}
 
-.header{ text-align:center; color:white; margin-bottom:15px; }
+.header{
+  text-align:center;
+  color:white;
+  margin-bottom:15px;
+}
 
 .card{
   background:white;
@@ -73,6 +82,7 @@ input,button{
   padding:12px;
   margin-top:8px;
   border-radius:10px;
+  box-sizing:border-box;
 }
 
 button{
@@ -82,7 +92,11 @@ button{
   font-weight:bold;
 }
 
-.loading{ display:none; text-align:center; }
+/* LOADING */
+.loading{
+  display:none;
+  text-align:center;
+}
 
 /* TICKET */
 .ticket{
@@ -94,6 +108,7 @@ button{
   opacity:0;
   transition:0.4s;
 }
+
 .ticket.show{
   transform:scale(1);
   opacity:1;
@@ -105,11 +120,20 @@ button{
   padding:12px;
 }
 
-.ticket-body{ padding:15px; }
+.ticket-body{
+  padding:15px;
+}
 
-.row{ display:flex; justify-content:space-between; margin-bottom:6px; }
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
 
-.perforation{ border-top:2px dashed #ccc; margin:12px 0; }
+.perforation{
+  border-top:2px dashed #ccc;
+  margin:12px 0;
+}
 
 .passenger{
   background:#f7f7f7;
@@ -123,15 +147,37 @@ button{
   padding:8px;
   border-radius:8px;
   text-align:center;
-}
-
-.status{ font-weight:bold; margin-top:6px; }
-
-/* WA BUTTON */
-.wa-btn{
   margin-top:10px;
-  background:#25D366;
 }
+
+.status{
+  font-weight:bold;
+  margin-top:8px;
+}
+
+/* WA FLOAT */
+.wa-float{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  width:55px;
+  height:55px;
+  background:#25D366;
+  color:white;
+  font-size:24px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  text-decoration:none;
+  z-index:999;
+  box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ANIMATION */
+@keyframes logoIn{ to{opacity:1; transform:scale(1);} }
+@keyframes fadeIn{ to{opacity:1;} }
+@keyframes spin{ to{transform:rotate(360deg);} }
 </style>
 </head>
 
@@ -145,7 +191,7 @@ button{
 </div>
 
 <!-- SOUND -->
-<audio id="clickSound" preload="auto">
+<audio id="clickSound">
 <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
 </audio>
 
@@ -158,7 +204,7 @@ button{
 
 <div class="card">
 <input id="pnr" placeholder="Kode Booking (6 karakter)">
-<button onclick="playSound(); cekPNR()">Cek Status</button>
+<button onclick="cekPNR()">Cek Status</button>
 </div>
 
 <div class="card loading" id="loading">
@@ -188,33 +234,31 @@ button{
 <div class="row"><span>Tiba</span><b id="arrive"></b></div>
 <div class="row"><span>Gate</span><b id="gate"></b></div>
 
-<div class="timer">
-⏳ <span id="countdown">10:00</span>
-</div>
-
+<div class="timer">⏳ <span id="countdown">10:00</span></div>
 <div class="status" id="status">BOOKED</div>
 
-<button class="wa-btn" onclick="kirimWA()">Kirim ke WhatsApp</button>
-
 </div>
 </div>
 
 </div>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="#" onclick="kirimWA()">💬</a>
 
 <script>
-let time=600;
-let timerInterval;
+let time = 600;
+let timer;
 
 const airlines=["Garuda Indonesia","Lion Air","Batik Air","Citilink"];
 const routes=["Jakarta → Bali","Makassar → Jakarta","Surabaya → Lombok","Kendari → Makassar"];
 
 /* SPLASH */
-window.addEventListener("load", ()=>{
-  setTimeout(()=>{
-    splash.classList.add("splash-hide");
-    setTimeout(()=>splash.style.display="none",600);
-  },2200);
-});
+window.onload=()=>{
+setTimeout(()=>{
+splash.classList.add("splash-hide");
+setTimeout(()=>splash.style.display="none",600);
+},2000);
+};
 
 /* SOUND */
 function beep(){
@@ -225,36 +269,31 @@ osc.connect(ctx.destination);
 osc.start();
 osc.stop(ctx.currentTime+0.1);
 }
+
 function playSound(){
 beep();
-let a=document.getElementById("clickSound");
-a.currentTime=0;
-a.play().catch(()=>{});
+clickSound.currentTime=0;
+clickSound.play().catch(()=>{});
 }
 
-/* CORE */
-function validPNR(pnr){
-return /^[A-Z0-9]{6}$/.test(pnr);
+/* VALID */
+function validPNR(p){
+return /^[A-Z0-9]{6}$/.test(p);
 }
 
+/* DATA */
 function randomTime(){
 let h=Math.floor(Math.random()*24);
 let m=Math.floor(Math.random()*60);
-if(h<10)h="0"+h;
-if(m<10)m="0"+m;
-return h+":"+m;
-}
-
-function randomName(){
-const n=["Budi","Andi","Rina","Sari","Dewi","Agus"];
-return n[Math.floor(Math.random()*n.length)];
+return (h<10?"0"+h:h)+":"+(m<10?"0"+m:m);
 }
 
 function genPassengers(){
+let names=["Budi","Andi","Rina","Sari","Dewi","Agus"];
 let c=Math.floor(Math.random()*3)+1;
 let html="";
 for(let i=0;i<c;i++){
-html+=`<div class="passenger">${randomName()} - Seat ${Math.floor(Math.random()*30)}A</div>`;
+html+=`<div class="passenger">${names[Math.floor(Math.random()*names.length)]} - Seat ${Math.floor(Math.random()*30)}A</div>`;
 }
 return html;
 }
@@ -272,20 +311,27 @@ arrive:randomTime()
 };
 }
 
+/* TIMER */
 function startTimer(){
-clearInterval(timerInterval);
-timerInterval=setInterval(()=>{
+clearInterval(timer);
+timer=setInterval(()=>{
 let m=Math.floor(time/60);
 let s=time%60;
-if(s<10)s="0"+s;
-countdown.innerText=m+":"+s;
+countdown.innerText=m+":"+(s<10?"0"+s:s);
 time--;
 
-if(time<400){ status.innerText="ISSUED"; status.style.color="green"; }
-if(time<200){ status.innerText="CHECK-IN"; status.style.color="blue"; }
+if(time<400){
+status.innerText="ISSUED";
+status.style.color="green";
+}
+
+if(time<200){
+status.innerText="CHECK-IN";
+status.style.color="blue";
+}
 
 if(time<0){
-clearInterval(timerInterval);
+clearInterval(timer);
 countdown.innerText="EXPIRED";
 status.innerText="EXPIRED";
 status.style.color="red";
@@ -293,6 +339,7 @@ status.style.color="red";
 },1000);
 }
 
+/* MAIN */
 function cekPNR(){
 let pnr=document.getElementById("pnr").value.toUpperCase();
 
@@ -334,15 +381,17 @@ status.style.color="orange";
 
 startTimer();
 
-},1500);
+},1200);
 }
 
 /* WHATSAPP */
 function kirimWA(){
-let text = `✈️ SkyPNR
+let text=`✈️ SkyPNR
 PNR: ${pnrOut.innerText}
 Rute: ${rute.innerText}
-Flight: ${flight.innerText}`;
+Flight: ${flight.innerText}
+Status: ${status.innerText}`;
+
 window.open("https://wa.me/?text="+encodeURIComponent(text));
 }
 </script>
