@@ -3,146 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyPNR</title>
+<title>SkyPNR - Airline Booking System</title>
 
 <style>
-:root{ --primary:#0b3c75; }
-
 body{
-  margin:0;
-  font-family:Arial;
-  background:linear-gradient(#0b3c75,#1e5aa8);
+margin:0;
+font-family:Arial;
+background:#f2f4f7;
+}
+
+.topbar{
+background:#0b3c75;
+color:white;
+text-align:center;
+padding:14px;
+font-weight:bold;
 }
 
 /* SPLASH */
 #splash{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:linear-gradient(#0b3c75,#1e5aa8);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  color:white;
-  z-index:9999;
-  transition:0.6s;
+position:fixed;
+inset:0;
+background:#0b3c75;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+color:white;
+z-index:9999;
+transition:0.6s;
 }
-.logo{
-  font-size:32px;
-  opacity:0;
-  transform:scale(0.8);
-  animation:logoIn 0.8s forwards;
-}
-.subtitle{
-  font-size:12px;
-  opacity:0;
-  animation:fadeIn 1s 0.5s forwards;
-}
+.logo{font-size:32px;font-weight:bold;opacity:0;transform:scale(0.8);animation:fadeIn 0.8s forwards;}
+.subtitle{font-size:12px;opacity:0;animation:fadeIn 1s .5s forwards;}
 .loader{
-  margin-top:20px;
-  width:40px;
-  height:40px;
-  border:4px solid white;
-  border-top:4px solid transparent;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
+width:40px;height:40px;
+border:3px solid white;
+border-top:3px solid transparent;
+border-radius:50%;
+margin-top:15px;
+animation:spin 1s linear infinite;
 }
-.splash-hide{ opacity:0; pointer-events:none; }
+.splash-hide{opacity:0;pointer-events:none;}
 
-/* MAIN */
-.container{ max-width:420px; margin:auto; padding:15px; }
-.header{ text-align:center; color:white; margin-bottom:15px; }
+.container{max-width:420px;margin:auto;padding:15px;}
 
 .card{
-  background:white;
-  padding:15px;
-  border-radius:14px;
-  margin-bottom:12px;
+background:white;
+padding:15px;
+border-radius:12px;
+margin-top:15px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
 }
 
 input,button{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  border-radius:10px;
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ddd;
+box-sizing:border-box;
 }
 
 button{
-  background:var(--primary);
-  color:white;
-  border:none;
-  font-weight:bold;
+background:#0b3c75;
+color:white;
+border:none;
+font-weight:bold;
 }
-
-.loading{ display:none; text-align:center; }
 
 /* TICKET */
 .ticket{
-  display:none;
-  background:white;
-  border-radius:16px;
-  overflow:hidden;
-  transform:scale(0.9);
-  opacity:0;
-  transition:0.4s;
-}
-.ticket.show{
-  transform:scale(1);
-  opacity:1;
+display:none;
+background:white;
+border-radius:12px;
+margin-top:15px;
+overflow:hidden;
+box-shadow:0 3px 12px rgba(0,0,0,0.1);
 }
 
 .ticket-header{
-  background:var(--primary);
-  color:white;
-  padding:12px;
+background:#0b3c75;
+color:white;
+padding:12px;
 }
 
-.ticket-body{ padding:15px; }
+.ticket-body{padding:15px;}
 
-.row{ display:flex; justify-content:space-between; margin-bottom:6px; }
-
-.perforation{ border-top:2px dashed #ccc; margin:12px 0; }
-
-.passenger{
-  background:#f7f7f7;
-  padding:8px;
-  border-radius:8px;
-  margin-bottom:6px;
+.row{
+display:flex;
+justify-content:space-between;
+margin:6px 0;
 }
 
+/* TIMER */
 .timer{
-  background:#ffe5e5;
-  padding:8px;
-  border-radius:8px;
-  text-align:center;
+margin-top:10px;
+background:#fff3f3;
+padding:10px;
+border-radius:8px;
+text-align:center;
 }
 
-.status{ font-weight:bold; margin-top:6px; }
+/* STATUS */
+.status{
+margin-top:8px;
+font-weight:bold;
+}
 
-/* WA FLOAT */
-.wa-float{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25D366;
-  color:white;
-  font-size:24px;
-  width:55px;
-  height:55px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  border-radius:50%;
-  box-shadow:0 4px 10px rgba(0,0,0,0.3);
-  text-decoration:none;
-  z-index:999;
+/* PAYMENT BUTTON */
+.pay-btn{
+margin-top:10px;
+background:#ff9800;
+color:white;
+}
+
+/* WA */
+.wa{
+position:fixed;
+right:18px;
+bottom:18px;
+width:55px;
+height:55px;
+background:#25D366;
+color:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+text-decoration:none;
+}
+
+/* PAYMENT */
+#payment{
+display:none;
+position:fixed;
+inset:0;
+background:white;
+z-index:99999;
+padding:20px;
 }
 
 /* ANIM */
-@keyframes logoIn{ to{opacity:1; transform:scale(1);} }
-@keyframes fadeIn{ to{opacity:1;} }
-@keyframes spin{ to{transform:rotate(360deg);} }
+@keyframes fadeIn{to{opacity:1;transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 
@@ -150,204 +154,191 @@ button{
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="logo">✈️ SkyPNR</div>
-  <div class="subtitle">Airline Reservation System</div>
-  <div class="loader"></div>
+<div class="logo">SkyPNR</div>
+<div class="subtitle">Airline Booking System</div>
+<div class="loader"></div>
 </div>
 
-<!-- SOUND -->
-<audio id="clickSound">
-<source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
-</audio>
+<div class="topbar">ONLINE BOOKING VERIFICATION SYSTEM</div>
 
 <div class="container">
 
-<div class="header">
-<h2>✈️ SkyPNR</h2>
-<p>Sistem Reservasi Penerbangan</p>
-</div>
-
 <div class="card">
-<input id="pnr" placeholder="Kode Booking (6 karakter)">
-<button onclick="playSound(); cekPNR()">Cek Status</button>
+<h3>Check Booking</h3>
+<input id="pnr" placeholder="Masukkan Kode Booking (PNR)">
+<button onclick="cekPNR()">Cek Status</button>
 </div>
 
-<div class="card loading" id="loading">
-<p>Memproses data...</p>
+<div class="card" id="loading" style="display:none;text-align:center;">
+Processing request...
 </div>
 
 <div class="ticket" id="ticket">
+
 <div class="ticket-header">
-<h3 id="airline"></h3>
-<small id="date"></small>
+<span id="airline"></span>
 </div>
 
 <div class="ticket-body">
 
 <div class="row"><span>PNR</span><b id="pnrOut"></b></div>
-<div class="row"><span>Rute</span><b id="rute"></b></div>
+<div class="row"><span>Route</span><b id="rute"></b></div>
 <div class="row"><span>Flight</span><b id="flight"></b></div>
-
-<div class="perforation"></div>
-
-<div id="passengers"></div>
-
-<div class="perforation"></div>
-
-<div class="row"><span>Tanggal</span><b id="tanggal"></b></div>
-<div class="row"><span>Berangkat</span><b id="depart"></b></div>
-<div class="row"><span>Tiba</span><b id="arrive"></b></div>
 <div class="row"><span>Gate</span><b id="gate"></b></div>
 
-<div class="timer">⏳ <span id="countdown">10:00</span></div>
-<div class="status" id="status">BOOKED</div>
+<div class="timer">
+⏳ <span id="countdown">30:00:00</span>
+</div>
+
+<div class="status" id="status">PENDING PAYMENT</div>
+
+<button class="pay-btn" onclick="openPayment()">💳 BAYAR SEKARANG</button>
 
 </div>
 </div>
 
 </div>
 
-<!-- WA FLOAT -->
-<a href="#" class="wa-float" onclick="kirimWA()">💬</a>
+<!-- PAYMENT -->
+<div id="payment">
+<h2>💳 Payment Gateway</h2>
+<hr>
+<p><b>PT Golden Rama Travel</b></p>
+<p>Bank MNC</p>
+<h2>2060-1000-6980</h2>
+<p>Atas Nama: PT Golden Rama Travel</p>
+<br>
+<button onclick="closePayment()">Kembali</button>
+</div>
+
+<!-- WA -->
+<a class="wa" onclick="kirimWA()">💬</a>
+
+<!-- AUDIO PRO -->
+<audio id="click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="success" src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3"></audio>
+<audio id="pay" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+<audio id="unlock" src="https://www.soundjay.com/button/sounds/button-09.mp3"></audio>
 
 <script>
-let time=600, timerInterval;
 
-const airlines=["Garuda Indonesia","Lion Air","Batik Air","Citilink"];
-const routes=["Jakarta → Bali","Makassar → Jakarta","Surabaya → Lombok","Kendari → Makassar"];
+/* DATABASE */
+const db={
+"SK9X2A":{airline:"Garuda Indonesia",rute:"Jakarta - Bali",flight:"GA-401",gate:"G3"},
+"PN6R4Q":{airline:"Batik Air",rute:"Makassar - Jakarta",flight:"ID-728",gate:"G7"},
+"JT8L3M":{airline:"Lion Air",rute:"Surabaya - Lombok",flight:"JT-210",gate:"G2"},
+"GA2Z9C":{airline:"Citilink",rute:"Kendari - Makassar",flight:"QG-331",gate:"G5"}
+};
+
+let time=600;
+let timer;
+let audioUnlocked=false;
+
+/* AUDIO UNLOCK (FIX SUARA TIDAK KELUAR) */
+document.body.addEventListener("click",()=>{
+if(audioUnlocked) return;
+document.getElementById("unlock").play().catch(()=>{});
+audioUnlocked=true;
+});
+
+/* SOUND */
+function s(id){
+let a=document.getElementById(id);
+a.currentTime=0;
+a.play().catch(()=>{});
+}
 
 /* SPLASH */
 window.onload=()=>{
 setTimeout(()=>{
 splash.classList.add("splash-hide");
 setTimeout(()=>splash.style.display="none",600);
-},2200);
+},1800);
 };
 
-/* SOUND */
-function beep(){
-let ctx=new(window.AudioContext||window.webkitAudioContext)();
-let osc=ctx.createOscillator();
-osc.frequency.value=800;
-osc.connect(ctx.destination);
-osc.start();
-osc.stop(ctx.currentTime+0.1);
-}
-function playSound(){
-beep();
-clickSound.currentTime=0;
-clickSound.play().catch(()=>{});
-}
-
-/* LOGIC */
-function validPNR(p){ return /^[A-Z0-9]{6}$/.test(p); }
-
-function randomTime(){
-let h=Math.floor(Math.random()*24);
-let m=Math.floor(Math.random()*60);
-return (h<10?"0"+h:h)+":"+(m<10?"0"+m:m);
-}
-
-function genPassengers(){
-let n=["Budi","Andi","Rina","Sari","Dewi"];
-let c=Math.floor(Math.random()*3)+1, html="";
-for(let i=0;i<c;i++){
-html+=`<div class="passenger">${n[Math.floor(Math.random()*n.length)]} - Seat ${Math.floor(Math.random()*30)}A</div>`;
-}
-return html;
-}
-
-function generateData(pnr){
-return{
-pnr,
-airline:airlines[Math.floor(Math.random()*airlines.length)],
-rute:routes[Math.floor(Math.random()*routes.length)],
-flight:"ID-"+Math.floor(Math.random()*900+100),
-gate:"G"+Math.floor(Math.random()*10),
-tanggal:new Date().toLocaleDateString("id-ID"),
-depart:randomTime(),
-arrive:randomTime()
-};
-}
-
+/* TIMER */
 function startTimer(){
-clearInterval(timerInterval);
-timerInterval=setInterval(()=>{
+clearInterval(timer);
+
+timer=setInterval(()=>{
+
 let m=Math.floor(time/60);
 let s=time%60;
+
 countdown.innerText=m+":"+(s<10?"0"+s:s);
+
 time--;
 
-if(time<400){ status.innerText="ISSUED"; status.style.color="green"; }
-if(time<200){ status.innerText="CHECK-IN"; status.style.color="blue"; }
+status.innerText="PENDING PAYMENT";
+status.style.color="orange";
 
 if(time<0){
-clearInterval(timerInterval);
-countdown.innerText="EXPIRED";
-status.innerText="EXPIRED";
+clearInterval(timer);
+status.innerText="PAYMENT EXPIRED";
 status.style.color="red";
 }
+
 },1000);
 }
 
+/* CHECK PNR */
 function cekPNR(){
-let pnr=pnrInput.value.toUpperCase();
 
-if(!validPNR(pnr)){
-alert("PNR harus 6 karakter");
+s("click");
+
+let pnr=document.getElementById("pnr").value.toUpperCase();
+
+if(!db[pnr]){
+alert("PNR tidak ditemukan");
 return;
 }
 
 loading.style.display="block";
-ticket.classList.remove("show");
+ticket.style.display="none";
 
 setTimeout(()=>{
+
 loading.style.display="none";
 
-let d=generateData(pnr);
+let d=db[pnr];
 
 airline.innerText=d.airline;
-pnrOut.innerText=d.pnr;
+pnrOut.innerText=pnr;
 rute.innerText=d.rute;
 flight.innerText=d.flight;
 gate.innerText=d.gate;
 
-tanggal.innerText=d.tanggal;
-depart.innerText=d.depart;
-arrive.innerText=d.arrive;
-
-date.innerText=new Date().toLocaleString("id-ID");
-
-passengers.innerHTML=genPassengers();
-
 ticket.style.display="block";
-setTimeout(()=>ticket.classList.add("show"),50);
 
-beep();
+s("success");
 
 time=600;
-status.innerText="BOOKED";
-status.style.color="orange";
-
 startTimer();
 
-},1500);
+},1000);
 }
 
-/* WHATSAPP */
-function kirimWA(){
-let text=`✈️ SkyPNR
+/* PAYMENT */
+function openPayment(){
+s("pay");
+payment.style.display="block";
+}
 
+function closePayment(){
+payment.style.display="none";
+}
+
+/* WA */
+function kirimWA(){
+let text=`SkyPNR Booking:
 PNR: ${pnrOut.innerText}
-Rute: ${rute.innerText}
+Route: ${rute.innerText}
 Flight: ${flight.innerText}
-Tanggal: ${tanggal.innerText}
-Berangkat: ${depart.innerText}
-Tiba: ${arrive.innerText}
 Status: ${status.innerText}`;
 
 window.open("https://wa.me/?text="+encodeURIComponent(text));
 }
+
 </script>
 
 </body>
