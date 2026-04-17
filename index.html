@@ -12,7 +12,6 @@ font-family:Arial;
 background:#f2f4f7;
 }
 
-/* TOP */
 .topbar{
 background:#0b3c75;
 color:white;
@@ -128,6 +127,12 @@ justify-content:center;
 font-size:24px;
 }
 
+/* ANIM */
+@keyframes fly{
+from{transform:translateX(-15px)}
+to{transform:translateX(15px)}
+}
+
 </style>
 </head>
 
@@ -139,7 +144,7 @@ font-size:24px;
 <h2>SkyPNR</h2>
 </div>
 
-<div class="topbar">BOOKING CHECK SYSTEM</div>
+<div class="topbar">BOOKING SYSTEM</div>
 
 <div class="container">
 
@@ -189,29 +194,37 @@ Loading...
 <!-- WA -->
 <div class="wa" onclick="wa()">💬</div>
 
-<!-- AUDIO SIMPLE -->
-<audio id="click">
-<source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
-</audio>
-
-<audio id="ok">
-<source src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3">
-</audio>
-
 <script>
 
+/* DATABASE */
 let db={
 "ABC123":{rute:"Jakarta - Bali",flight:"GA-101",gate:"G3"},
-"XYZ789":{rute:"Surabaya - Lombok",flight:"JT-210",gate:"G2"}
+"XYZ789":{rute:"Surabaya - Lombok",flight:"JT-210",gate:"G2"},
+"SK9X2A":{rute:"Jakarta - Medan",flight:"ID-728",gate:"G7"}
 };
 
+let time=1800; // 30 menit
 let timer;
-let time=1800; // 30 MENIT
 
-function sound(id){
-let a=document.getElementById(id);
-a.currentTime=0;
-a.play().catch(()=>{});
+/* BIP SOUND (ANTI BLOCK - PASTI BUNYI) */
+function bip(){
+let ctx=new (window.AudioContext||window.webkitAudioContext)();
+let o=ctx.createOscillator();
+let g=ctx.createGain();
+
+o.type="sine";
+o.frequency.value=800;
+g.gain.value=0.1;
+
+o.connect(g);
+g.connect(ctx.destination);
+
+o.start();
+
+setTimeout(()=>{
+o.stop();
+ctx.close();
+},120);
 }
 
 /* SPLASH */
@@ -244,7 +257,7 @@ document.getElementById("status").innerText="EXPIRED";
 /* CEK PNR */
 function cekPNR(){
 
-sound("click");
+bip();
 
 let p=document.getElementById("pnr").value.toUpperCase();
 
@@ -265,7 +278,7 @@ document.getElementById("rute").innerText=db[p].rute;
 document.getElementById("flight").innerText=db[p].flight;
 document.getElementById("gate").innerText=db[p].gate;
 
-sound("ok");
+bip();
 
 startTimer();
 
@@ -274,15 +287,17 @@ startTimer();
 
 /* PAYMENT */
 function openPay(){
+bip();
 document.getElementById("payment").style.display="block";
 }
+
 function closePay(){
 document.getElementById("payment").style.display="none";
 }
 
 /* WA */
 function wa(){
-window.open("https://wa.me/?text=SkyPNR Booking");
+window.open("https://wa.me/?text=SkyPNR Booking System");
 }
 
 </script>
