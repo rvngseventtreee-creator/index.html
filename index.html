@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyPNR - Airline Booking System</title>
+<title>SkyPNR - Airline System</title>
 
 <style>
 body{
@@ -110,7 +110,7 @@ margin-top:8px;
 font-weight:bold;
 }
 
-/* PAYMENT BUTTON */
+/* PAYMENT */
 .pay-btn{
 margin-top:10px;
 background:#ff9800;
@@ -134,7 +134,7 @@ font-size:24px;
 text-decoration:none;
 }
 
-/* PAYMENT */
+/* PAYMENT PAGE */
 #payment{
 display:none;
 position:fixed;
@@ -144,7 +144,7 @@ z-index:99999;
 padding:20px;
 }
 
-/* ANIM */
+/* ANIMATION */
 @keyframes fadeIn{to{opacity:1;transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -159,7 +159,7 @@ padding:20px;
 <div class="loader"></div>
 </div>
 
-<div class="topbar">ONLINE BOOKING VERIFICATION SYSTEM</div>
+<div class="topbar">ONLINE BOOKING SYSTEM</div>
 
 <div class="container">
 
@@ -211,14 +211,25 @@ Processing request...
 <button onclick="closePayment()">Kembali</button>
 </div>
 
-<!-- WA -->
+<!-- WHATSAPP -->
 <a class="wa" onclick="kirimWA()">💬</a>
 
 <!-- AUDIO PRO -->
-<audio id="click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
-<audio id="success" src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3"></audio>
-<audio id="pay" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-<audio id="unlock" src="https://www.soundjay.com/button/sounds/button-09.mp3"></audio>
+<audio id="clickSound">
+<source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
+</audio>
+
+<audio id="successSound">
+<source src="https://www.soundjay.com/misc/sounds/success-bell-1.mp3">
+</audio>
+
+<audio id="paySound">
+<source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3">
+</audio>
+
+<audio id="unlockSound">
+<source src="https://www.soundjay.com/button/sounds/button-09.mp3">
+</audio>
 
 <script>
 
@@ -232,16 +243,16 @@ const db={
 
 let time=600;
 let timer;
-let audioUnlocked=false;
+let audioReady=false;
 
-/* AUDIO UNLOCK (FIX SUARA TIDAK KELUAR) */
+/* AUDIO UNLOCK */
 document.body.addEventListener("click",()=>{
-if(audioUnlocked) return;
-document.getElementById("unlock").play().catch(()=>{});
-audioUnlocked=true;
+if(audioReady) return;
+document.getElementById("unlockSound").play().catch(()=>{});
+audioReady=true;
 });
 
-/* SOUND */
+/* SOUND FUNCTION */
 function s(id){
 let a=document.getElementById(id);
 a.currentTime=0;
@@ -284,7 +295,7 @@ status.style.color="red";
 /* CHECK PNR */
 function cekPNR(){
 
-s("click");
+s("clickSound");
 
 let pnr=document.getElementById("pnr").value.toUpperCase();
 
@@ -310,7 +321,7 @@ gate.innerText=d.gate;
 
 ticket.style.display="block";
 
-s("success");
+s("successSound");
 
 time=600;
 startTimer();
@@ -320,7 +331,7 @@ startTimer();
 
 /* PAYMENT */
 function openPayment(){
-s("pay");
+s("paySound");
 payment.style.display="block";
 }
 
@@ -328,7 +339,7 @@ function closePayment(){
 payment.style.display="none";
 }
 
-/* WA */
+/* WHATSAPP */
 function kirimWA(){
 let text=`SkyPNR Booking:
 PNR: ${pnrOut.innerText}
