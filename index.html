@@ -105,11 +105,11 @@ button {
         <h3>Detail Penerbangan</h3>
         <p><b>Nama:</b> <span id="rNama"></span></p>
         <p><b>Kode PNR:</b> <span id="rPNR"></span></p>
-        <p><b>Rute:</b> Jakarta → Bali</p>
-        <p><b>Seat:</b> 12A</p>
-        <p><b>Class:</b> Ekonomi</p>
-        <p><b>No E-Tiket:</b> 123-4567890123</p>
-        <p><b>Jam:</b> 10:00 WIB</p>
+        <p><b>Rute:</b> <span id="rRute"></span></p>
+        <p><b>Seat:</b> <span id="rSeat"></span></p>
+        <p><b>Class:</b> <span id="rClass"></span></p>
+        <p><b>No E-Tiket:</b> <span id="rTiket"></span></p>
+        <p><b>Jam:</b> <span id="rJam"></span></p>
 
         <div class="timer">
             ⏳ Batas Pembayaran: <span id="countdown">10:00</span>
@@ -122,13 +122,25 @@ button {
 </div>
 
 <script>
-let time = 600; // 10 menit
+let time = 600;
+
+// DATA RANDOM PENUMPANG
+const dataPenumpang = [
+    {
+        nama: "Budi Santoso",
+        pnr: "ABC123",
+        rute: "Jakarta → Bali",
+        seat: "12A",
+        kelas: "Ekonomi",
+        tiket: "123-4567890123",
+        jam: "10:00 WIB"
+    }
+];
 
 function startTimer() {
     let timer = setInterval(function() {
         let minutes = Math.floor(time / 60);
         let seconds = time % 60;
-
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
         document.getElementById("countdown").innerText = minutes + ":" + seconds;
@@ -143,16 +155,23 @@ function startTimer() {
 }
 
 function cekPNR() {
-    let pnr = document.getElementById("pnr").value;
+    let pnr = document.getElementById("pnr").value.toUpperCase();
     let nama = document.getElementById("nama").value;
 
-    if(pnr === "" || nama === "") {
-        alert("Isi semua data!");
+    let ditemukan = dataPenumpang.find(p => p.pnr === pnr);
+
+    if (!ditemukan) {
+        alert("Data tidak ditemukan!");
         return;
     }
 
-    document.getElementById("rNama").innerText = nama;
-    document.getElementById("rPNR").innerText = pnr;
+    document.getElementById("rNama").innerText = ditemukan.nama;
+    document.getElementById("rPNR").innerText = ditemukan.pnr;
+    document.getElementById("rRute").innerText = ditemukan.rute;
+    document.getElementById("rSeat").innerText = ditemukan.seat;
+    document.getElementById("rClass").innerText = ditemukan.kelas;
+    document.getElementById("rTiket").innerText = ditemukan.tiket;
+    document.getElementById("rJam").innerText = ditemukan.jam;
 
     document.getElementById("hasil").style.display = "block";
 
