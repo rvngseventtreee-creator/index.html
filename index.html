@@ -1,105 +1,152 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Cek PNR</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 350px;
-    }
-    h2 {
-      text-align: center;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .result {
-      margin-top: 20px;
-      background: #eef;
-      padding: 10px;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Cek PNR</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.header {
+  text-align: center;
+  color: white;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.container {
+  max-width: 400px;
+  margin: 20px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #4facfe;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #eef;
+  display: none;
+}
+
+.admin {
+  margin-top: 30px;
+  border-top: 2px solid #ddd;
+  padding-top: 15px;
+}
+</style>
+
 </head>
 <body>
 
-<div class="container">
-  <h2>Cek PNR</h2>
-  <input type="text" id="pnr" placeholder="Masukkan Kode PNR">
-  <button onclick="cekPNR()">Cek</button>
+<div class="header">✈️ Sistem Cek PNR</div>
 
-  <div id="hasil" class="result" style="display:none;"></div>
+<div class="container">
+  <h3>Cek PNR</h3>
+  <input type="text" id="pnr" placeholder="Kode PNR">
+  <button onclick="cekPNR()">Cek</button>
+  <div id="hasil" class="result"></div>
+
+  <div class="admin">
+    <h3>Admin Input PNR</h3>
+    <input id="a_pnr" placeholder="PNR">
+    <input id="a_nama" placeholder="Nama">
+    <input id="a_rute" placeholder="Rute">
+    <input id="a_jam" placeholder="Jam">
+    <input id="a_class" placeholder="Class">
+    <input id="a_status" placeholder="Status">
+    <input id="a_meal" placeholder="Meal">
+    <input id="a_bagasi" placeholder="Bagasi">
+    <button onclick="tambahPNR()">Simpan</button>
+  </div>
 </div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
 <script>
-function cekPNR() {
+const firebaseConfig = {
+  apiKey: "API_KEY_KAMU",
+  authDomain: "PROJECT_KAMU.firebaseapp.com",
+  projectId: "PROJECT_KAMU",
+  storageBucket: "PROJECT_KAMU.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 🔎 CEK PNR
+async function cekPNR() {
   const pnr = document.getElementById("pnr").value.toUpperCase();
-
-  // Data dummy (contoh database)
-  const dataPNR = {
-    "ABC123": {
-      nama: "Akbar",
-      rute: "Makassar - Jakarta",
-      jam: "10:30",
-      class: "Economy",
-      status: "Confirmed",
-      meal: "Nasi + Ayam",
-      bagasi: "20kg"
-    },
-    "XYZ789": {
-      nama: "Budi",
-      rute: "Surabaya - Bali",
-      jam: "14:00",
-      class: "Business",
-      status: "On Time",
-      meal: "Seafood",
-      bagasi: "30kg"
-    }
-  };
-
   const hasil = document.getElementById("hasil");
 
-  if (dataPNR[pnr]) {
-    const d = dataPNR[pnr];
+  const doc = await db.collection("pnr").doc(pnr).get();
+
+  if (doc.exists) {
+    const d = doc.data();
     hasil.style.display = "block";
     hasil.innerHTML = `
-      <b>Nama:</b> ${d.nama}<br>
-      <b>Rute:</b> ${d.rute}<br>
-      <b>Jam Terbang:</b> ${d.jam}<br>
-      <b>Class:</b> ${d.class}<br>
-      <b>Status:</b> ${d.status}<br>
-      <b>Meal:</b> ${d.meal}<br>
-      <b>Bagasi:</b> ${d.bagasi}
+      👤 ${d.nama}<br>
+      🛫 ${d.rute}<br>
+      ⏰ ${d.jam}<br>
+      💺 ${d.class}<br>
+      📊 ${d.status}<br>
+      🍽 ${d.meal}<br>
+      🎒 ${d.bagasi}
     `;
   } else {
     hasil.style.display = "block";
-    hasil.innerHTML = "PNR tidak ditemukan!";
+    hasil.innerHTML = "❌ PNR tidak ditemukan";
   }
+}
+
+// ➕ TAMBAH DATA
+async function tambahPNR() {
+  const pnr = document.getElementById("a_pnr").value.toUpperCase();
+
+  await db.collection("pnr").doc(pnr).set({
+    nama: document.getElementById("a_nama").value,
+    rute: document.getElementById("a_rute").value,
+    jam: document.getElementById("a_jam").value,
+    class: document.getElementById("a_class").value,
+    status: document.getElementById("a_status").value,
+    meal: document.getElementById("a_meal").value,
+    bagasi: document.getElementById("a_bagasi").value
+  });
+
+  alert("✅ Data berhasil disimpan!");
 }
 </script>
 
 </body>
 </html>
+
